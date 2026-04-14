@@ -1,0 +1,11 @@
+numpy>=1.26.0
+pandas>=2.1.0
+yfinance>=0.2.36
+statsmodels>=0.14.1
+scipy>=1.11.4
+scikit-learn>=1.3.2
+hmmlearn>=0.3.0
+python-dateutil>=2.8.2
+streamlit>=1.30.0
+plotly>=5.18.0
+matplotlib>=3.8.2
