@@ -415,18 +415,22 @@ def main() -> None:
     if args.plot:
         charts_dir = os.path.join(config.results_dir, "charts")
         os.makedirs(charts_dir, exist_ok=True)
-        logger.info("saving PNG charts to %s/", charts_dir)
+        # also write to docs/images so charts are git-tracked for the README
+        docs_charts_dir = os.path.join("docs", "images")
+        os.makedirs(docs_charts_dir, exist_ok=True)
+        logger.info("saving PNG charts to %s/ and %s/", charts_dir, docs_charts_dir)
 
         port_eq = portfolio.equity_curve
         spy_eq = spy_equity.reindex(port_eq.index, method="ffill")
 
         def _save_png(fig, filename: str) -> None:
-            path = os.path.join(charts_dir, filename)
-            try:
-                fig.write_image(path, width=1400, height=700, scale=2)
-                logger.info("saved %s", path)
-            except Exception as exc:
-                logger.warning("failed to save %s: %s -- skipping", filename, exc)
+            for target_dir in [charts_dir, docs_charts_dir]:
+                path = os.path.join(target_dir, filename)
+                try:
+                    fig.write_image(path, width=1400, height=700, scale=2)
+                    logger.info("saved %s", path)
+                except Exception as exc:
+                    logger.warning("failed to save %s: %s -- skipping", filename, exc)
 
         _save_png(visualisation.equity_curve(port_eq, spy_eq), "equity_curve.png")
         _save_png(visualisation.drawdown_chart(port_eq), "drawdown.png")
@@ -550,13 +554,17 @@ def main() -> None:
         if args.plot and not fold_data.empty:
             charts_dir = os.path.join(config.results_dir, "charts")
             os.makedirs(charts_dir, exist_ok=True)
-            try:
-                visualisation.walk_forward_chart(wf_result.oos_equity, fold_data).write_image(
-                    os.path.join(charts_dir, "walk_forward.png"), width=1400, height=700, scale=2
-                )
-                logger.info("walk-forward chart saved")
-            except Exception as exc:
-                logger.warning("walk_forward.png failed: %s -- skipping", exc)
+            docs_charts_dir = os.path.join("docs", "images")
+            os.makedirs(docs_charts_dir, exist_ok=True)
+            wf_fig = visualisation.walk_forward_chart(wf_result.oos_equity, fold_data)
+            for save_dir in [charts_dir, docs_charts_dir]:
+                try:
+                    wf_fig.write_image(
+                        os.path.join(save_dir, "walk_forward.png"), width=1400, height=700, scale=2
+                    )
+                    logger.info("walk-forward chart saved to %s", save_dir)
+                except Exception as exc:
+                    logger.warning("walk_forward.png failed for %s: %s -- skipping", save_dir, exc)
 
     if args.sensitivity:
         logger.info("starting sensitivity sweep")
@@ -596,17 +604,21 @@ def main() -> None:
         if args.plot:
             charts_dir = os.path.join(config.results_dir, "charts")
             os.makedirs(charts_dir, exist_ok=True)
-            try:
-                visualisation.sensitivity_heatmap(
-                    sens_grid,
-                    param1_values=config.sensitivity_entry_z,
-                    param2_values=config.sensitivity_max_hl,
-                ).write_image(
-                    os.path.join(charts_dir, "sensitivity_heatmap.png"), width=1200, height=800, scale=2
-                )
-                logger.info("sensitivity heatmap saved")
-            except Exception as exc:
-                logger.warning("sensitivity_heatmap.png failed: %s -- skipping", exc)
+            docs_charts_dir = os.path.join("docs", "images")
+            os.makedirs(docs_charts_dir, exist_ok=True)
+            sens_fig = visualisation.sensitivity_heatmap(
+                sens_grid,
+                param1_values=config.sensitivity_entry_z,
+                param2_values=config.sensitivity_max_hl,
+            )
+            for save_dir in [charts_dir, docs_charts_dir]:
+                try:
+                    sens_fig.write_image(
+                        os.path.join(save_dir, "sensitivity_heatmap.png"), width=1200, height=800, scale=2
+                    )
+                    logger.info("sensitivity heatmap saved to %s", save_dir)
+                except Exception as exc:
+                    logger.warning("sensitivity_heatmap.png failed for %s: %s -- skipping", save_dir, exc)
 
         print("\n=== Sensitivity: Sharpe Grid (entry_z rows × max_hl cols) ===")
         sharpe_df = pd.DataFrame(

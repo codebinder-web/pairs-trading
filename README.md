@@ -168,11 +168,11 @@ No-lookahead checklist:
 
 The in-sample period (2018–2024) includes COVID and rate-hike regimes that are particularly hostile to slow-reverting pairs. The OOS walk-forward aggregates 23 independent 3-month test windows across the same date range and shows positive Sharpe, Profit Factor above 1, and near-zero beta — consistent with the factor-neutral construction.
 
-![Equity Curve](results/charts/equity_curve.png)
+![Equity Curve](docs/images/equity_curve.png)
 
-![Walk-Forward Validation](results/charts/walk_forward.png)
+![Walk-Forward Validation](docs/images/walk_forward.png)
 
-![Monthly Returns](results/charts/monthly_returns.png)
+![Monthly Returns](docs/images/monthly_returns.png)
 
 ---
 
@@ -180,25 +180,25 @@ The in-sample period (2018–2024) includes COVID and rate-hike regimes that are
 
 ### Pair Deep-Dive
 
-![Pair Dashboard](results/charts/pair_dashboard.png)
+![Pair Dashboard](docs/images/pair_dashboard.png)
 
 Three rows: normalised price levels for the pair, the Kalman filter spread with OU equilibrium bands, and the z-score series with entry/exit/stop threshold lines and trade markers.
 
 ### Sensitivity Analysis
 
-![Sensitivity Heatmap](results/charts/sensitivity_heatmap.png)
+![Sensitivity Heatmap](docs/images/sensitivity_heatmap.png)
 
 Sharpe ratio across a 4×4 grid of entry_z and max_half_life values; the stable region sits at entry_z ≥ 2.5 and max_half_life ≥ 60 days, where results are consistent rather than dependent on the default parameter choice.
 
 ### Return Distribution
 
-![Return Distribution](results/charts/return_distribution.png)
+![Return Distribution](docs/images/return_distribution.png)
 
 Daily portfolio returns are right-skewed (skewness = 3.93) with heavy positive tails — consistent with a strategy that holds small losses for extended periods and takes quick profits on mean-reversion.
 
 ### Correlation Heatmap
 
-![Correlation Heatmap](results/charts/correlation_heatmap.png)
+![Correlation Heatmap](docs/images/correlation_heatmap.png)
 
 Factor-neutral return correlations are substantially lower and more uniformly distributed than raw price correlations, confirming that the neutralisation step is removing the market and sector components that would otherwise inflate spurious cointegration signals.
 
